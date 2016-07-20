@@ -43,15 +43,19 @@ public class CSVCombiner {
 		}
 
 		BufferedWriter writer = null;
-		writer = fio.WriteFile("CSV_TEST.txt");
-
-		String[] temp2 = list.get(0);
-		for (int i = 0; i < temp2.length; i++) {
-			System.out.print(i + ":");
-			System.out.println(temp2[i] + ",");
+		writer = fio.WriteFile("Antiphisto.arff");
+		
+		writer.write("@relation Antiphisto");
+		writer.newLine();
+		for (int k = 0; k < 51; k++) {
+			writer.write("@attribute testfeature" + (k + 1) + " real");
+			writer.newLine();
 		}
-		
-		
+		writer.write("@attribute Result {Phish, Legit}");
+		writer.newLine();
+		writer.newLine();
+		writer.write("@data");
+		writer.newLine();
 
 		for (int k = 0; k < list.size() ;k++) {
 			String[] test = list.get(k);
