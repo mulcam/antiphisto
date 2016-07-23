@@ -114,8 +114,6 @@ public class SFSController {
 			result.append(tempString);
 			System.out.print(tempString);
 			
-			
-			
 			tempString = "Step" + i + "-최적셋: " + bestSet + "\r\n";
 			result.append(tempString);
 			System.out.print(tempString);

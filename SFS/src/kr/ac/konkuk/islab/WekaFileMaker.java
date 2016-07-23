@@ -5,23 +5,33 @@ import java.io.BufferedWriter;
 
 public class WekaFileMaker {
 
-	public static void makeWekaFile(int i, int j, String[] bestmem) throws Exception {
+	public static void makeWekaFile(int i, int j, String[] bestmem, String fileExt) throws Exception {
 		FileIO fio = new FileIO();
-		boolean bestMemChk = false;
-		if (bestmem != null)
-			bestMemChk = true;
 
-		// 새 특징 데이터 리더 설정
-		BufferedReader nowreader = fio.ReadFile(Constants.dataFolder + "/" + j + ".csv");
-		int fileLineCount = fio.getFileLineCount(Constants.dataFolder + "/" + j + ".csv");
+		boolean newFeatureChk = false;
+		BufferedReader nowreader = null;
+
+		int fileLineCount = 0;
+		BufferedWriter writer = null;
+
+		boolean bestMemChk = false;
+		if (bestmem != null) {
+			bestMemChk = true;
+		}
+		if (fileExt == null) {
+			newFeatureChk = true;
+			// 새 특징 데이터 리더 설정
+			nowreader = fio.ReadFile(Constants.dataFolder + "/" + j + ".csv");
+			fileLineCount = fio.getFileLineCount(Constants.dataFolder + "/" + j + ".csv");
+			fileExt ="";
+		} else {
+			fileExt = "_" + fileExt;
+		}
 
 		// 결과 데이터 리더 설정
 		BufferedReader resultReader = fio.ReadFile(Constants.dataFolder + "/result.csv");
-
-		// 파일 내용 작성
-		BufferedWriter writer = null;
 		// weka 파일 생성
-		writer = fio.WriteFile(Constants.resultFolder + "/result" + i + "_" + j + ".arff");
+		writer = fio.WriteFile(Constants.resultFolder + "/result" + i + fileExt + "_" + j + ".arff");
 		writer.write("@relation " + Constants.targetName);
 		writer.newLine();
 
@@ -31,6 +41,7 @@ public class WekaFileMaker {
 			// 기존 특징 데이터 리더 설정
 			// 데이터 추가
 			reader = new BufferedReader[bestmem.length];
+			fileLineCount = fio.getFileLineCount(Constants.dataFolder + "/" + bestmem[0] + ".csv");
 			for (int y = 0; y < bestmem.length; y++) {
 				reader[y] = fio.ReadFile(Constants.dataFolder + "/" + bestmem[y] + ".csv");
 			}
@@ -43,11 +54,16 @@ public class WekaFileMaker {
 				writer.newLine();
 			}
 		}
-		// 현재 변수 서술
-		headerText = nowreader.readLine();
-		headerText = headerText.replace("\"", "");
-		writer.write(headerText);
-		writer.newLine();
+
+		if (newFeatureChk) {
+			// 현재 변수 서술
+			headerText = nowreader.readLine();
+			headerText = headerText.replace("\"", "");
+			writer.write(headerText);
+			writer.newLine();
+		}
+
+		// 결과 변수 서술
 		headerText = resultReader.readLine();
 		headerText = headerText.replace("\"", "");
 		writer.write(headerText);
@@ -71,11 +87,13 @@ public class WekaFileMaker {
 				}
 			}
 
-			// 추가되는 특징 데이터 입력
-			tempString = nowreader.readLine();
-			if (tempString != null) {
-				writer.write(tempString + ",");
-				// System.out.print(tempString + ",");
+			if (newFeatureChk) {
+				// 추가되는 특징 데이터 입력
+				tempString = nowreader.readLine();
+				if (tempString != null) {
+					writer.write(tempString + ",");
+					// System.out.print(tempString + ",");
+				}
 			}
 
 			// 결과값 입력
@@ -90,8 +108,12 @@ public class WekaFileMaker {
 		writer.close();
 	}
 
+	public static void makeWekaFile(int i, int j, String[] bestmem) throws Exception {
+		makeWekaFile(i, j, bestmem, null);
+	}
+
 	public static void makeWekaFile(int i, int j) throws Exception {
-		makeWekaFile(i, j, null);
+		makeWekaFile(i, j, null, null);
 	}
 
 	public static void makeAntiphsitoWekaFile(int i, int j, String[] bestmem) throws Exception {
@@ -194,4 +216,5 @@ public class WekaFileMaker {
 		writer.close();
 		// Weka 데이터 생성 끝
 	}
+
 }

@@ -12,15 +12,23 @@ public class RFThread implements Runnable {
 	private int i;
 	private int j;
 	private String seq;
+	private String fileExt;
 	private ArrayList<String> a;
 	
-
 	public RFThread(int i, int j, ArrayList<String> a) {
 		this.i = i;
 		this.j = j;
 		this.a = a;
-	
+		this.fileExt = "";
 		seq = this.i +"/" + this.j;
+	}
+
+	public RFThread(int i, int j, ArrayList<String> a, String fileExt) {
+		this.i = i;
+		this.j = j;
+		this.a = a;
+		this.fileExt = "_" + fileExt;
+		seq = this.i +"/" + this.j + " " + fileExt;
 	}
 
 	public void run() {
@@ -28,7 +36,7 @@ public class RFThread implements Runnable {
 		System.out.println(seq + " RF thread start.");
 		try {
 			FileIO fio = new FileIO();
-			BufferedReader reader = fio.ReadFile(Constants.resultFolder + "/result" + i + "_" + j + ".arff");
+			BufferedReader reader = fio.ReadFile(Constants.resultFolder + "/result" + i + fileExt + "_" + j + ".arff");
 			Instances dataset = new Instances(reader);
 
 			// ������ �� ����
