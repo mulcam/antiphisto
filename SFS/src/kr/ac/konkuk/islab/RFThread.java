@@ -13,6 +13,7 @@ public class RFThread implements Runnable {
 	private int j;
 	private String seq;
 	private ArrayList<String> a;
+	
 
 	public RFThread(int i, int j, ArrayList<String> a) {
 		this.i = i;
@@ -27,16 +28,16 @@ public class RFThread implements Runnable {
 		System.out.println(seq + " RF thread start.");
 		try {
 			FileIO fio = new FileIO();
-			BufferedReader reader = fio.ReadFile("result" + i + "_" + j + ".arff");
+			BufferedReader reader = fio.ReadFile(Constants.resultFolder + "/result" + i + "_" + j + ".arff");
 			Instances dataset = new Instances(reader);
 
-			// µ¥ÀÌÅÍ ¼Â »ý¼º
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			dataset.setClassIndex(dataset.numAttributes() - 1);
 
-			// ºÐ·ù±â ¼³Á¤
+			// ï¿½Ð·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			RandomForest classifier = new RandomForest();
 
-			// Á¤È®µµ µµÃâ
+			// ï¿½ï¿½È®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			Evaluation eval = new Evaluation(dataset);
 			eval.crossValidateModel(classifier, dataset, 10, new Random(1));
 			

@@ -7,7 +7,7 @@ import java.util.Map;
 public class FeatureNormalizer {
 	private Map<Integer, Double>  featureMax;
 	private Map<Integer, Double> featureMin;
-	
+
 
 	public  FeatureNormalizer() throws Exception {
 
@@ -22,7 +22,7 @@ public class FeatureNormalizer {
 
 			fio = new FileIO();
 
-			reader = fio.ReadFile("data/" + j + ".csv");
+			reader = fio.ReadFile(Constants.dataFolder+ "/" + j + ".csv");
 
 			input = null;
 
@@ -46,8 +46,7 @@ public class FeatureNormalizer {
 	
 	String getPercentage(double a, int tempnum){
 		double temp = (a - featureMin.get(tempnum))/(featureMax.get(tempnum) - featureMin.get(tempnum));
-		temp = Math.round(temp * 100);
-		temp = temp/100;
+		temp = temp * (1.0 - 0) + 0;
 		return String.valueOf(temp);	
 	}
 
